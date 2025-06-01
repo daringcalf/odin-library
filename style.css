@@ -67,15 +67,49 @@ footer a:hover {
 
 section header {
   display: flex;
-  padding: 1rem 4rem;
+  padding: 0.2rem 4rem;
   border-top: 1px solid #e0e0e0;
   border-bottom: 1px solid #e0e0e0;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1rem;
 }
 
 #available-books header {
   justify-content: space-between;
+}
+
+#add-book-btn {
+  background: transparent;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  border-radius: 0.4rem;
+  padding: 0.3rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
   align-items: center;
 }
+
+#add-book-btn svg {
+  width: 1.2em;
+  height: 1.2em;
+  margin-right: 0.4rem;
+  fill: #495057;
+}
+
+#add-book-btn:hover {
+  background: #f8f9fa;
+  border-color: #adb5bd;
+}
+
+#add-book-btn:active {
+  background: #e9ecef;
+}
+
 
 section header h2 {
   margin: 0;
