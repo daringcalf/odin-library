@@ -71,6 +71,7 @@ section header {
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.6);
   margin-bottom: 1rem;
+  z-index: 10;
 }
 
 #available-books header {
