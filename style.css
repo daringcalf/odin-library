@@ -126,7 +126,40 @@ section header h2 {
   transition: all 0.3s ease;
   height: fit-content;
   width: 200px;
+  position: relative;
 }
+
+.delete-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+.delete-btn svg {
+  width: 1rem;
+  height: 1rem;
+  fill: white;
+}
+
+.book-card:hover .delete-btn {
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  background: rgba(220, 53, 69, 0.9);
+}
+
 
 .book-card:hover {
   position: relative;
@@ -281,6 +314,22 @@ section header h2 {
   color: var(--button-text-color);
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(var(--dominant-color-rgb), 0.3);
+}
+
+.book-card.has-custom-colors:hover .delete-btn {
+  background: rgba(var(--hover-text-color-rgb), 0.8);
+}
+
+.book-card.has-custom-colors:hover .delete-btn svg {
+  fill: var(--hover-bg-color);
+}
+
+.book-card.has-custom-colors:hover .delete-btn:hover {
+  background: rgba(220, 53, 69, 0.9);
+}
+
+.book-card.has-custom-colors:hover .delete-btn:hover svg {
+  fill: white;
 }
 
 /* Dialog Styling */

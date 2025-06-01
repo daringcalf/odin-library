@@ -421,6 +421,13 @@ function addSampleBooks() {
   );
 }
 
+function removeBookFromLibrary(bookId) {
+  const bookIndex = myLibrary.findIndex((book) => book.id === bookId);
+  if (bookIndex !== -1) {
+    myLibrary.splice(bookIndex, 1);
+  }
+}
+
 function displayBooks() {
   availableBooks = myLibrary.filter(
     (book) => book.readStatus === readStatus.AVAILABLE
@@ -458,6 +465,23 @@ function createBookCard(book) {
   const bookCard = document.createElement("div");
   bookCard.className = "book-card";
   bookCard.dataset.bookId = book.id;
+
+  // Add delete button
+  const deleteButton = document.createElement("button");
+  deleteButton.className = "delete-btn";
+  deleteButton.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M9,3V4H4V6H5V19A2,2 0 0,0 7,21H17A2,2 0 0,0 19,19V6H20V4H15V3H9M7,6H17V19H7V6M9,8V17H11V8H9M13,8V17H15V8H13Z" />
+    </svg>
+  `;
+  deleteButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (confirm(`Are you sure you want to delete "${book.title}"?`)) {
+      removeBookFromLibrary(book.id);
+      displayBooks();
+    }
+  });
+  bookCard.appendChild(deleteButton);
 
   const coverDiv = document.createElement("div");
   // if cover is provided, use it; otherwise, use a placeholder div
