@@ -552,9 +552,26 @@ const addBookToLibraryButton = document.querySelector("#add-book-btn");
 const form = document.querySelector("form");
 const cancelButton = document.querySelector("#cancel-btn");
 
+// Helper function to close dialog with animation
+function closeDialogWithAnimation() {
+  dialog.classList.add("closing");
+
+  // Wait for animation to complete before actually closing
+  setTimeout(() => {
+    dialog.classList.remove("closing");
+    dialog.close();
+  }, 200); // 200ms matches the animation duration
+}
+
+// Prevent default dialog closing and use our animation instead
+dialog.addEventListener("cancel", (e) => {
+  e.preventDefault();
+  closeDialogWithAnimation();
+});
+
 cancelButton.addEventListener("click", (e) => {
   e.preventDefault();
-  dialog.close();
+  closeDialogWithAnimation();
 });
 
 addBookToLibraryButton.addEventListener("click", () => {
@@ -576,7 +593,7 @@ form.addEventListener("submit", (event) => {
     addBookToLibrary(title, author, yearPublished, status, cover);
 
     form.reset();
-    dialog.close();
+    closeDialogWithAnimation();
     displayBooks();
   } catch (error) {
     alert(error.message);
