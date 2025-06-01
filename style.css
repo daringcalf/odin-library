@@ -239,15 +239,18 @@ section header h2 {
 }
 
 .book-title {
-  font-size: 1.5em;
-  margin-bottom: 2rem;
+  font-size: 1.4em;
+  margin-bottom: 1rem;
   color: #333;
+  font-weight: 500;
+  line-height: 1.3;
 }
 
 .book-author {
-  font-size: 1.2em;
-  margin-bottom: 8px;
-  color: #666;
+  font-size: 1.1em;
+  color: #555;
+  font-style: italic;
+  font-weight: 400;
 }
 
 .book-details {
@@ -258,12 +261,13 @@ section header h2 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 0.75rem;
 }
 
-.book-pages,
 .book-year {
-  font-size: 0.9em;
-  color: #999;
+  font-size: 0.95em;
+  color: #666;
+  font-weight: 400;
 }
 
 .book-status {
@@ -287,9 +291,20 @@ section header h2 {
   padding: 0.4rem 0.8rem;
   border-radius: 0.3rem;
   transition: all 0.2s ease;
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   min-width: 70px;
   text-transform: capitalize;
+  position: relative;
+}
+
+.toggle-status-btn::before {
+  content: '';
+  position: absolute;
+  top: -0.75rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e0e0e0 20%, #e0e0e0 80%, transparent);
 }
 
 .toggle-status-btn:hover {
