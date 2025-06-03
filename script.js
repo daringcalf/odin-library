@@ -1,11 +1,3 @@
-const myLibrary = [];
-
-const readStatus = {
-  AVAILABLE: "Available",
-  READING: "Reading",
-  FINISHED: "Finished",
-};
-
 // Color extraction and contrast calculation functions
 function extractDominantColor(img) {
   const canvas = document.createElement("canvas");
@@ -32,9 +24,8 @@ function extractDominantColor(img) {
       if (alpha < 128) continue;
 
       // Reduce color space to improve grouping
-      const key = `${Math.floor(r / 16) * 16}-${Math.floor(g / 16) * 16}-${
-        Math.floor(b / 16) * 16
-      }`;
+      const key = `${Math.floor(r / 16) * 16}-${Math.floor(g / 16) * 16}-${Math.floor(b / 16) * 16
+        }`;
 
       if (colorMap[key]) {
         colorMap[key].count++;
@@ -122,8 +113,7 @@ function getContrastingTextColor(backgroundColor) {
     console.warn(
       `Low contrast detected: ${bestContrast.toFixed(
         2
-      )}:1 with background rgb(${backgroundColor.r}, ${backgroundColor.g}, ${
-        backgroundColor.b
+      )}:1 with background rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b
       })`
     );
   }
@@ -324,119 +314,150 @@ function generateUniqueId() {
   return crypto.randomUUID();
 }
 
-function Book(
-  title,
-  author,
-  yearPublished,
-  status = readStatus.AVAILABLE,
-  cover = null
-) {
-  if (!new.target) {
-    throw new Error("Book constructor must be called with 'new'.");
+class Book {
+  static generateUniqueId() {
+    return crypto.randomUUID();
+  }
+  static readStatus = {
+    AVAILABLE: "Available",
+    READING: "Reading",
+    FINISHED: "Finished",
+  };
+
+  constructor(title, author, yearPublished, status = Book.readStatus.AVAILABLE, cover = null) {
+    if (!title || !author) {
+      throw new Error("Title and author are required fields.");
+    }
+    this.id = Book.generateUniqueId();
+    this.title = title;
+    this.author = author;
+    this.readStatus = status;
+    this.yearPublished = yearPublished;
+    this.cover = cover;
   }
 
-  if (!title || !author) {
-    throw new Error("Title and author are required fields.");
+  toggleStatus() {
+    if (this.readStatus === Book.readStatus.AVAILABLE) {
+      this.readStatus = Book.readStatus.READING;
+    } else if (this.readStatus === Book.readStatus.READING) {
+      this.readStatus = Book.readStatus.FINISHED;
+    } else {
+      this.readStatus = Book.readStatus.AVAILABLE;
+    }
   }
-
-  this.id = generateUniqueId();
-  this.title = title;
-  this.author = author;
-  this.readStatus = status;
-  this.yearPublished = yearPublished;
-  this.cover = cover;
 }
 
-Book.prototype.toggleStatus = function () {
-  if (this.readStatus === readStatus.AVAILABLE) {
-    this.readStatus = readStatus.READING;
-  } else if (this.readStatus === readStatus.READING) {
-    this.readStatus = readStatus.FINISHED;
-  } else {
-    this.readStatus = readStatus.AVAILABLE;
-  }
-};
+class Library {
+  #books;
 
-function addBookToLibrary(
-  title,
-  author,
-  yearPublished,
-  status = readStatus.AVAILABLE,
-  cover = null
-) {
-  const book = new Book(title, author, yearPublished, status, cover);
-  myLibrary.push(book);
+  constructor() {
+    this.#books = [];
+  }
+
+  get books() {
+    return this.#books;
+  }
+
+  addBook(book) {
+    if (!(book instanceof Book)) {
+      throw new Error("Only instances of Book can be added to the library.");
+    }
+    this.#books.push(book);
+  }
+
+  removeBook(bookId) {
+    const bookIndex = this.#books.findIndex((book) => book.id === bookId);
+    if (bookIndex !== -1) {
+      this.#books.splice(bookIndex, 1);
+    }
+  }
 }
+
+const myLibrary = new Library();
 
 function addSampleBooks() {
-  addBookToLibrary(
-    "The Hobbit",
-    "J.R.R. Tolkien",
-    1937,
-    readStatus.AVAILABLE,
-    "https://covers.openlibrary.org/b/id/14627222-L.jpg"
+  myLibrary.addBook(
+    new Book(
+      "The Hobbit",
+      "J.R.R. Tolkien",
+      1937,
+      Book.readStatus.AVAILABLE,
+      "https://covers.openlibrary.org/b/id/14627222-L.jpg"
+    )
   );
-  addBookToLibrary(
-    "1984",
-    "George Orwell",
-    1949,
-    readStatus.AVAILABLE,
-    "https://covers.openlibrary.org/b/id/14845126-L.jpg"
+  myLibrary.addBook(
+    new Book(
+      "1984",
+      "George Orwell",
+      1949,
+      Book.readStatus.AVAILABLE,
+      "https://covers.openlibrary.org/b/id/14845126-L.jpg"
+    )
   );
-  addBookToLibrary(
-    "To Kill a Mockingbird",
-    "Harper Lee",
-    1960,
-    readStatus.AVAILABLE,
-    "https://covers.openlibrary.org/b/id/14856323-L.jpg"
+  myLibrary.addBook(
+    new Book(
+      "To Kill a Mockingbird",
+      "Harper Lee",
+      1960,
+      Book.readStatus.AVAILABLE,
+      "https://covers.openlibrary.org/b/id/14856323-L.jpg"
+    )
   );
-  addBookToLibrary("My Ex's Diary", "My Ex", 2018, readStatus.AVAILABLE),
-    addBookToLibrary(
+  myLibrary.addBook(
+    new Book(
+      "My Ex's Diary",
+      "My Ex",
+      2018,
+      Book.readStatus.AVAILABLE
+    )
+  );
+  myLibrary.addBook(
+    new Book(
       "The Great Gatsby",
       "F. Scott Fitzgerald",
       1925,
-      readStatus.READING,
+      Book.readStatus.READING,
       "https://covers.openlibrary.org/b/id/12364437-L.jpg"
-    );
-  addBookToLibrary(
-    "Moby Dick",
-    "Herman Melville",
-    1851,
-    readStatus.READING,
-    "https://ia800100.us.archive.org/view_archive.php?archive=/5/items/l_covers_0012/l_covers_0012_62.zip&file=0012621992-L.jpg"
+    )
   );
-  addBookToLibrary(
-    "The Language Instinct",
-    "Steven Pinker",
-    1994,
-    readStatus.FINISHED,
-    "https://covers.openlibrary.org/b/id/6624418-L.jpg"
+  myLibrary.addBook(
+    new Book(
+      "Moby Dick",
+      "Herman Melville",
+      1851,
+      Book.readStatus.READING,
+      "https://ia800100.us.archive.org/view_archive.php?archive=/5/items/l_covers_0012/l_covers_0012_62.zip&file=0012621992-L.jpg"
+    )
   );
-  addBookToLibrary(
-    "Pride and Prejudice",
-    "Jane Austen",
-    1813,
-    readStatus.FINISHED,
-    "https://ia800505.us.archive.org/view_archive.php?archive=/35/items/l_covers_0014/l_covers_0014_60.zip&file=0014601367-L.jpg"
+  myLibrary.addBook(
+    new Book(
+      "The Language Instinct",
+      "Steven Pinker",
+      1994,
+      Book.readStatus.FINISHED,
+      "https://covers.openlibrary.org/b/id/6624418-L.jpg"
+    )
   );
-}
-
-function removeBookFromLibrary(bookId) {
-  const bookIndex = myLibrary.findIndex((book) => book.id === bookId);
-  if (bookIndex !== -1) {
-    myLibrary.splice(bookIndex, 1);
-  }
+  myLibrary.addBook(
+    new Book(
+      "Pride and Prejudice",
+      "Jane Austen",
+      1813,
+      Book.readStatus.FINISHED,
+      "https://ia800505.us.archive.org/view_archive.php?archive=/35/items/l_covers_0014/l_covers_0014_60.zip&file=0014601367-L.jpg"
+    )
+  );
 }
 
 function displayBooks() {
-  availableBooks = myLibrary.filter(
-    (book) => book.readStatus === readStatus.AVAILABLE
+  availableBooks = myLibrary.books.filter(
+    (book) => book.readStatus === Book.readStatus.AVAILABLE
   );
-  readingBooks = myLibrary.filter(
-    (book) => book.readStatus === readStatus.READING
+  readingBooks = myLibrary.books.filter(
+    (book) => book.readStatus === Book.readStatus.READING
   );
-  readBooks = myLibrary.filter(
-    (book) => book.readStatus === readStatus.FINISHED
+  readBooks = myLibrary.books.filter(
+    (book) => book.readStatus === Book.readStatus.FINISHED
   );
 
   availableBooksList = document.querySelector("#available-books .book-list");
@@ -447,7 +468,6 @@ function displayBooks() {
   readBooksList.innerHTML = "";
 
   availableBooks.forEach((book) => {
-    // console.log(book.title);
     const bookCard = createBookCard(book);
     availableBooksList.appendChild(bookCard);
   });
@@ -477,7 +497,7 @@ function createBookCard(book) {
   deleteButton.addEventListener("click", (e) => {
     e.stopPropagation();
     if (confirm(`Are you sure you want to delete "${book.title}"?`)) {
-      removeBookFromLibrary(book.id);
+      myLibrary.removeBook(book.id);
       displayBooks();
     }
   });
@@ -548,11 +568,11 @@ function createBookCard(book) {
   const toggleStatusButton = document.createElement("button");
   toggleStatusButton.className = "toggle-status-btn";
   toggleStatusButton.textContent =
-    book.readStatus === readStatus.AVAILABLE
+    book.readStatus === Book.readStatus.AVAILABLE
       ? "Read"
-      : book.readStatus === readStatus.READING
-      ? "Finish"
-      : "Unread";
+      : book.readStatus === Book.readStatus.READING
+        ? "Finish"
+        : "Unread";
   toggleStatusButton.addEventListener("click", () => {
     book.toggleStatus();
     displayBooks();
@@ -614,7 +634,15 @@ form.addEventListener("submit", (event) => {
   const cover = formData.get("cover");
 
   try {
-    addBookToLibrary(title, author, yearPublished, status, cover);
+    myLibrary.addBook(
+      new Book(
+        title,
+        author,
+        yearPublished,
+        Book.readStatus[status],
+        cover
+      )
+    );
 
     form.reset();
     closeDialogWithAnimation();
